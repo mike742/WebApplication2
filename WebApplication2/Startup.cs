@@ -28,6 +28,8 @@ namespace WebApplication2
             services.AddControllersWithViews();
 
             services.AddScoped<ICourse, MockCourseRepo>();
+            services.AddScoped<IInstructor, MockInstructorRepo>();
+            services.AddScoped<IStudent, MockStudentRepo>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
