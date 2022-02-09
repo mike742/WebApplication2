@@ -10,17 +10,19 @@ namespace WebApplication2.Controllers
 {
     public class CoursesController : Controller
     {
-        private readonly ICourse _repo;
+        private readonly ICourse _courseRepo;
+        private readonly IStudent _studentsRepo;
 
-        public CoursesController(ICourse repo)
+        public CoursesController(ICourse courseRepo, IStudent studentsRepo)
         {
-            _repo = repo; 
+            _courseRepo = courseRepo;
+            _studentsRepo = studentsRepo;
         }
 
         // GET: CoursesController
         public ActionResult Index() // GetAll
         {
-            return View(_repo.GetAll());
+            return View(_courseRepo.GetAll());
         }
 
         // GET: CoursesController/Details/5
@@ -90,6 +92,17 @@ namespace WebApplication2.Controllers
             {
                 return View();
             }
+        }
+
+        public List<string> GetStudentsByCourseId(int id)
+        {
+            var result = _studentsRepo
+                .GetAll()
+                .Where(s => s.CourseId == id)
+                .Select(s => $"{s.StudentId}: {s.FirstName} {s.LastName} <br>")
+                .ToList();
+            
+            return result;
         }
     }
 }

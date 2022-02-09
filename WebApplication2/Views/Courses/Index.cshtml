@@ -1,10 +1,6 @@
 ﻿@model IEnumerable<WebApplication2.Models.Course>
 
-@{
-    ViewData["Title"] = "Index";
-}
-
-<h1>Index</h1>
+<h1>Courses</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -37,7 +33,13 @@
                 @Html.DisplayFor(modelItem => item.CourseNumber)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.CourseName)
+                <span 
+                      data-toggle="modal" 
+                      data-target="#exampleModal"
+                      style="cursor:pointer"
+                      onclick="showStudents('@item.CourseId', '@item.CourseName')">
+                    @Html.DisplayFor(modelItem => item.CourseName)
+                </span>
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Description)
@@ -51,3 +53,36 @@
 }
     </tbody>
 </table>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                ...
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function showStudents(id, name) {
+        console.log(id);
+        $('#exampleModalLabel').html('Students of ' + name + " course:");
+
+        let url = "/Courses/GetStudentsByCourseId/" + id;
+        $.get(url, function (data) {
+            console.log(data);
+            $('.modal-body').html(data);
+        });
+    }
+</script>

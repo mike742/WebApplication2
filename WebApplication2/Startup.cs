@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -8,8 +9,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WebApplication2.Data;
 using WebApplication2.Data.Interfaces;
 using WebApplication2.Data.MockRepos;
+using WebApplication2.Data.SqlRepos;
 
 namespace WebApplication2
 {
@@ -27,7 +30,14 @@ namespace WebApplication2
         {
             services.AddControllersWithViews();
 
-            services.AddScoped<ICourse, MockCourseRepo>();
+            services.AddDbContext<AppDbContext>(op =>
+            {
+                var connectionString = Configuration.GetConnectionString("Default");
+                op.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
+            });
+
+            // services.AddScoped<ICourse, MockCourseRepo>();
+            services.AddScoped<ICourse, SqlCourseRepo>();
             services.AddScoped<IInstructor, MockInstructorRepo>();
             services.AddScoped<IStudent, MockStudentRepo>();
         }
