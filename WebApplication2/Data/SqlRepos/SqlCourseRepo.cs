@@ -18,12 +18,20 @@ namespace WebApplication2.Data.SqlRepos
 
         public void Create(Course input)
         {
-            throw new NotImplementedException();
+            _context.Add(input);
+            _context.SaveChanges();
         }
 
         public void Delete(int id)
         {
-            throw new NotImplementedException();
+            var courseToDelete = _context.Courses.FirstOrDefault(c => c.CourseId == id);
+
+            if (courseToDelete != null)
+            {
+                _context.Remove(courseToDelete);
+                _context.SaveChanges();
+            }
+            
         }
 
         public IEnumerable<Course> GetAll()
@@ -33,12 +41,20 @@ namespace WebApplication2.Data.SqlRepos
 
         public Course GetById(int id)
         {
-            throw new NotImplementedException();
+            return _context.Courses.FirstOrDefault(c => c.CourseId == id);
         }
 
         public void Update(int id, Course input)
         {
-            throw new NotImplementedException();
+            var courseInDb = _context.Courses.FirstOrDefault(c => c.CourseId == id);
+
+            if (courseInDb != null)
+            {
+                courseInDb.CourseName = input.CourseName;
+                courseInDb.CourseNumber = input.CourseNumber;
+                courseInDb.Description = input.Description;
+            }
+            _context.SaveChanges();
         }
     }
 }
